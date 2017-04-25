@@ -85,7 +85,7 @@ bool ContactFixture::execute(void * objectInstance, QString actionName, QHash<QS
         }
     } else{
 
-        QContactManager * manager = connectContactManager(parameters, stdOut);      
+        QContactManager * manager = connectContactManager(parameters, stdOut);
         if ( manager == NULL) {
             executed = false;
         }
@@ -101,7 +101,7 @@ bool ContactFixture::execute(void * objectInstance, QString actionName, QHash<QS
                 executed = false;
             }
             delete manager;
-        }        
+        }
     }
     return executed;
 }
@@ -109,7 +109,7 @@ bool ContactFixture::execute(void * objectInstance, QString actionName, QHash<QS
 bool ContactFixture::addContacts(QContactManager& manager, QHash<QString, QString> parameters, QString & stdOut)
 {
     TasLogger::logger()->debug("> ContactFixture::addContacts");
-    
+
     QContact curr;
 
     // Manage name

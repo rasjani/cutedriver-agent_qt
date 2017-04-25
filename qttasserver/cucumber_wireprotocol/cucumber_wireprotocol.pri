@@ -23,4 +23,3 @@ SOURCES += $$PWD/cucumberwireprotocolserver.cpp \
 HEADERS += $$PWD/cucumberwireprotocolserver.h\
     $$PWD/cucumberapplicationmanager.h
 
-include(../../3rdparty/qjson.pri)
