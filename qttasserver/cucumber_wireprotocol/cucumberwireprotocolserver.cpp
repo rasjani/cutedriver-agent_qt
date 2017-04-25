@@ -243,7 +243,7 @@ void CucumberWireprotocolServer::connectionDisconnect()
 
 
 void CucumberWireprotocolServer::connectionError()
-{    
+{
 
     QIODevice *connection = qobject_cast<QIODevice*>(sender());
     if (connection) {

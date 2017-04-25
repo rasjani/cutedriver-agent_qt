@@ -5,7 +5,7 @@
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 2.1, as published by the Free Software Foundation.
- * 
+ *
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,7 +17,7 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
- 
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
@@ -32,7 +32,7 @@ using namespace QJson;
 
 int main(int argc, char *argv[]) {
   QCoreApplication app (argc, argv);
- 
+
   CmdLineParser cmd (app.arguments());
   CmdLineParser::Result res = cmd.parse();
   if (res == CmdLineParser::Help)
@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
     qCritical ("The file you specified doesn't exist!");
     exit (1);
   }
-  
+
   Parser parser;
   bool ok;
 

@@ -24,13 +24,13 @@
 # Original source avaiable from:
 # http://gitorious.org/qjson/qjson/trees/0.7.1
 
-unix:!symbian:!mac {
+unix:!mac {
   # just use default library of the distribution, assume it's been installed
     message(Using platform QJSON library)
     LIBS += -lqjson
 }
 
-win32|symbian|mac: {
+win32|macx: {
     message(Using included QJSON library)
     LIBS += -L$$PWD/qjson/lib -lqjson
     INCLUDEPATH += $$PWD

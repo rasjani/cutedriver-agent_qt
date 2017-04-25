@@ -41,15 +41,6 @@ SUBDIRS += popupfixture
 #SUBDIRS += qtscriptfixture
 }
 
-symbian: {
-#	SUBDIRS += utilfixture
-        SUBDIRS += launchfixture
-}
-CONFIG(maemo){
-SUBDIRS += localefixture
-#SUBDIRS += duifixture #not supported anymore
-}
-
 SUBDIRS += tapfixture
 
 SUBDIRS += dialogfixture

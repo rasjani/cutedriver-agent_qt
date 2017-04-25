@@ -5,7 +5,7 @@
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 2.1, as published by the Free Software Foundation.
- * 
+ *
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -463,7 +463,7 @@ void TestParser::testReadWrite()
   QFETCH( QVariant, variant );
   Serializer serializer;
   bool ok;
-  
+
   QByteArray json = serializer.serialize(variant);
   QVERIFY(!json.isNull());
 
@@ -479,14 +479,14 @@ void TestParser::testReadWrite_data()
 
     // array tests
     QTest::newRow( "empty array" ) << QVariant(QVariantList());
-    
+
     // basic array
     QVariantList list;
     list << QString(QLatin1String("hello"));
-    list << 12; 
+    list << 12;
     QTest::newRow( "basic array" ) << QVariant(list);
 
-    // simple map 
+    // simple map
     QVariantMap map;
     map[QString(QLatin1String("Name"))] = 32;
     QTest::newRow( "complicated array" ) << QVariant(map);
