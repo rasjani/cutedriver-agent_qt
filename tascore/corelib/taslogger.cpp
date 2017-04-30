@@ -25,10 +25,6 @@
 #include "taslogger.h"
 #include "tascoreutils.h"
 
-const char* const LOG_PATH = "/logs/testability/";
-
-const int LOG_SIZE = 100000;
-
 void debugOutput(QtMsgType type, const QMessageLogContext &, const QString &message)
 {
     if (message.length() <= 0)
