@@ -86,3 +86,6 @@ unix:!macx:!CONFIG(no_x):!wayland {
 unix:!macx {
     LIBS += -lrt
 }
+
+
+include(../../config.pri)

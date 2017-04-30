@@ -17,34 +17,18 @@
 ##
 ############################################################################
 
-
-
 TEMPLATE = lib
 TARGET = qttestability
+QT += network xml testlib gui widgets quick
 include(../tasbase.pri)
 
-target.path = $$TAS_TARGET_LIB
 DESTDIR = lib
 DEFINES += BUILD_TAS
 linux:QMAKE_DISTCLEAN += /usr/lib/libqttestability.so
 
-
 DEPENDPATH += . corelib services services/interactionhandlers services/interactionhandlers/gestures services/interactionhandlers/eventgenerator
 INCLUDEPATH += . corelib services services/interactionhandlers services/interactionhandlers/gestures services/interactionhandlers/eventgenerator
 
-CONFIG(qml_id){
-    DEFINES += QML_ID
-}
-
-CONFIG(no_webkit) {
-    DEFINES += NO_WEBKIT
-}
-
-CONFIG(debug_enabled) {
-DEFINES += DEBUG_ENABLED
-}
-
-# Input
 include(corelib/uilib.pri)
 include(corelib/corelib.pri)
 include(services/services.pri)
@@ -53,41 +37,17 @@ HEADERS += $$PUBLIC_HEADERS
 
 QT += network xml testlib gui widgets quick
 
-!CONFIG(no_webkit) {
-    QT += webkitwidgets
-}
-
-
-#configuration file
-configuration.files = conf/qt_testability.ini
-unix:!macx{
-  configuration.path = /etc/qt_testability
-
-  HEADERS.path = /usr/include/tdriver/
-
-  # include desktop file into rpm
-  CONFIG(RPM) {
+target.path = $$TAS_TARGET_LIB
+CONFIGURATION.files=conf/qt_testability.ini
+CONFIGURATION.path=$$SETTINGS_PATH
+HEADERS.path=$$TAS_TARGET_HEADERS
+HEADERS.files = $$HEADERS
+CONFIG(RPM) {
     DESKTOP.files = conf/xdg/autostart/qttasserver.desktop
     DESKTOP.path = /etc/xdg/autostart/
     INSTALLS += DESKTOP
-  }
-}
-
-macx: {
-  configuration.path = /etc/qt_testability
-  HEADERS.path = /usr/include/tdriver/
-}
-win32:{
-  configuration.path=/qttas/conf
-  HEADERS.path = /qttas/inc
 }
 
 INSTALLS += target
-INSTALLS += configuration
-
-HEADERS.files = $$HEADERS
+INSTALLS += CONFIGURATION
 INSTALLS += HEADERS
-
-
-
-
