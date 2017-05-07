@@ -2,38 +2,43 @@ language: cpp
 os:
   - linux
   - osx
+
 dist: trusty
+
 compiler:
   - clang
   - gcc
+
 sudo: required
 
 env:
-  - QT=56 BREW=5  PPA=beineri/opt-qt562-trusty
-  - QT=57 BREW=ex PPA=beineri/opt-qt571-trusty
-  - QT=58 BREW=ex PPA=beineri/opt-qt58-trusty
+ - QT=5 BREW=ex PPA=ex
+ - QT=56 BREW=5  PPA=beineri/opt-qt562-trusty
+ - QT=57 BREW=ex PPA=beineri/opt-qt571-trusty
+ - QT=58 BREW=ex PPA=beineri/opt-qt58-trusty
 
 matrix:
-  allow_failures:
-    - { os: osx, env: QT=55 BREW=55 PPA=beineri/opt-qt551-trusty } # https://llvm.org/bugs/show_bug.cgi?id=26396
   exclude:
+    - { os: osx, compiler: gcc,   env: QT=5 BREW=ex PPA=ex }
+    - { os: osx, compiler: clang, env: QT=5 BREW=ex PPA=ex }
+    - { os: osx, env: QT=56 BREW=ex PPA=beineri/opt-qt562-trusty  }
     - { os: osx, env: QT=57 BREW=ex PPA=beineri/opt-qt571-trusty }
     - { os: osx, env: QT=58 BREW=ex PPA=beineri/opt-qt58-trusty  }
-    - { os: osx, compiler: gcc, env: QT=5  BREW=5 } # Qt 5.6 no longer supports gcc on OS X.
-    - { os: osx, compiler: gcc, env: QT=56 BREW=5  PPA=beineri/opt-qt562-trusty } # Qt 5.6 no longer supports gcc on OS X.
+    - { os: osx, compiler: gcc, env: QT=5  BREW=5 }
 
 before_install:
-  - '[[ "$TRAVIS_OS_NAME" != linux || -z "$PPA" ]] || sudo add-apt-repository -y ppa:$PPA'
+  - '[[ "$TRAVIS_OS_NAME" != linux || -z "$PPA" || "$PPA" != */opt-* ]] || sudo add-apt-repository -y ppa:$PPA'
   - '[ "$TRAVIS_OS_NAME" != linux ] || sudo apt-get -qy update'
   - '[ "$TRAVIS_OS_NAME" != osx ] || brew update'
 
 install:
+  - echo Installing Dependencies 
+  - '[[ "$TRAVIS_OS_NAME" != linux ]] || sudo apt-get -qy install fakeroot devscripts equivs libx11-dev libxext-dev libxi-dev libxtst-dev'
   - echo Installing QT ${QT}
   - '[[ "$TRAVIS_OS_NAME" != linux || "$PPA" != */opt-* ]] || sudo apt-get -qy install qt${QT}3d qt${QT}base qt${QT}canvas3d qt${QT}connectivity qt${QT}declarative qt${QT}graphicaleffects qt${QT}imageformats qt${QT}location qt${QT}multimedia qt${QT}quickcontrols qt${QT}quickcontrols2 qt${QT}script qt${QT}sensors qt${QT}serialport qt${QT}svg qt${QT}tools qt${QT}translations qt${QT}x11extras qt${QT}xmlpatterns'
-  - '[ "$TRAVIS_OS_NAME" != osx ] || brew install qt$BREW'
-  - '[ "$TRAVIS_OS_NAME" != osx ] || brew link --force qt$BREW'
-  - echo Installing Dependencies ${QT}
-  - '[[ "$TRAVIS_OS_NAME" != linux ]] || sudo apt-get -qy install libx11-dev libxext-dev libxi-dev libxtst-dev'
+  - '[[ "$TRAVIS_OS_NAME" != linux  || "$PPA" != ex ]] || sudo mk-build-deps --install debian/control'
+  - '[[ "$TRAVIS_OS_NAME" != osx ]] || brew install qt$BREW'
+  - '[[ "$TRAVIS_OS_NAME" != osx ]] || brew link --force qt$BREW'
 
 before_script:
   - '[[ "$TRAVIS_OS_NAME" != linux || "$CXX" != clang++ ]] || export QMAKESPEC=linux-clang'
@@ -43,9 +48,11 @@ before_script:
   - '[[ "$TRAVIS_OS_NAME" != linux || "$PPA" != */opt-* ]] || . /opt/qt$QT/bin/qt$QT-env.sh'
   - '[[ "$TRAVIS_OS_NAME" != linux || "$PPA" == */opt-* ]] || export QT_SELECT=qt5'
   - pushd $TRAVIS_BUILD_DIR
-  - qmake -r CONFIG+=debug_and_release CONFIG+=no_mobility CONFIG+=no_webkit qt_testability.pro
+  - '[[ "$QT" == 5 || "$PPA" == ex ]] || qmake -r CONFIG+=release CONFIG+=no_mobility CONFIG+=no_webkit qt_testability.pro'
   - popd
 
 script:
   - pushd $TRAVIS_BUILD_DIR
-  - make all
+  - '[[ "$QT" == 5 || "$PPA" == ex ]] || make all'
+  - '[[ "$QT" != 5 || "$PPA" != ex ]] || dpkg-buildpackage -rfakeroot'
+
