@@ -19,16 +19,11 @@
 
 TEMPLATE = subdirs
 
-SUBDIRS += qttraverser
-
-SUBDIRS += viewitemtraverser
-
-SUBDIRS += layouttraverser
-
-SUBDIRS += scenegraphtraverser
+SUBDIRS += qttraverser \
+           viewitemtraverser \
+           layouttraverser \
+           scenegraphtraverser
 
 !CONFIG(no_webkit) {
-SUBDIRS += webkittraverser
+  SUBDIRS += webkittraverser
 }
-
-CONFIG  += ordered
