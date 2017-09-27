@@ -16,7 +16,7 @@
 ## of this file.
 ##
 ############################################################################
-
+include(../tasbase.pri)
 TEMPLATE = subdirs
 
 SUBDIRS += qttraverser \

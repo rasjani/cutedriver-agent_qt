@@ -25,14 +25,8 @@
 #include "taslogger.h"
 
 TestabilitySettings *TestabilitySettings::mInstance = 0;
-
-#if defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-static QString basePath = "/etc/qt_testability";
-static QString fileName = "/etc/qt_testability/qt_testability.ini";
-#else
-static QString basePath = "c:/qttas";
-static QString fileName = "/qttas/conf/qt_testability.ini";
-#endif
+static QString basePath = SETTINGS_PATH;
+static QString fileName = SETTINGS_FILE;
 
 TestabilitySettings::TestabilitySettings()
 {

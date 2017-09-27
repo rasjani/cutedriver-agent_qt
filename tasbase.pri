@@ -17,33 +17,77 @@
 ##
 ############################################################################
 
+isEmpty(TASBASE_PRI) {
+    TASBASE_PRI=1
 
-TAS_VERSION=2.0.0
+    TAS_VERSION=2.0.0
 
-#CONFIG += silent
 
-unix:!macx {
-  isEmpty(PREFIX) {
-    PREFIX = /usr
-  }
+    isEmpty(LOG_PATH) {
+        LOG_PATH=/logs/testability/
+    }
+    isEmpty(LOG_SIZE) {
+        LOG_SIZE=100000
+    }
+    isEmpty(SETTINGS_PATH) {
+        win32: {
+            SETTINGS_PATH=/qttas/conf
+        } else {
+            SETTINGS_PATH=/etc/testability
+        }
+    }
+    isEmpty(SETTINGS_FILE) {
+        SETTINGS_FILE=$$SETTINGS_PATH/qt_testability.ini
+    }
 
-  isEmpty(PREFIX_PLUGINS) {
-    PREFIX_PLUGINS = $$[QT_INSTALL_PLUGINS]/
-  }
-  TAS_TARGET_BIN=$$PREFIX/bin
-  TAS_TARGET_LIB=$$PREFIX/lib
-  TAS_TARGET_STEPS=/etc/qt_testability/cucumber
-  TAS_TARGET_PLUGIN=$$PREFIX_PLUGINS
-}
-win32: {
-  TAS_TARGET_BIN=/qttas/bin
-  TAS_TARGET_LIB=/qttas/bin
-  TAS_TARGET_STEPS=/qttas/cucumber
-  TAS_TARGET_PLUGIN=$$[QT_INSTALL_PLUGINS]/
-}
-macx: {
-  TAS_TARGET_BIN=/usr/local/bin
-  TAS_TARGET_LIB=/usr/lib
-  TAS_TARGET_STEPS=/etc/qt_testability/cucumber
-  TAS_TARGET_PLUGIN=$$[QT_INSTALL_PLUGINS]/
+
+    # Expose settings to code
+    DEFINES*=LOG_PATH=\\\"$$LOG_PATH\\\"
+    DEFINES*=LOG_SIZE=$$LOG_SIZE
+    DEFINES*=SETTINGS_FILE=\\\"$$SETTINGS_FILE\\\"
+    DEFINES*=SETTINGS_PATH=\\\"$$SETTINGS_PATH\\\"
+
+    CONFIG(no_webkit) {
+        DEFINES += NO_WEBKIT
+    } else {
+        !qtHaveModule(webkitwidgets): { # TODO: Verify that this works! module name could be different?
+            CONFIG += no_webkit
+            DEFINES += NO_WEBKIT
+        }
+    }
+
+    CONFIG(debug_enabled) {
+        DEFINES += DEBUG_ENABLED
+    }
+
+    # TODO: Nothing is using this macro
+    CONFIG(qml_id){
+        DEFINES += QML_ID
+    }
+
+    isEmpty(PREFIX) {
+        unix:!macx:PREFIX=/usr
+        macx:PREFIX=/usr/local
+        win32:PREFIX=/qttas
+    }
+
+    isEmpty(PREFIX_PLUGINS) {
+      PREFIX_PLUGINS = $$[QT_INSTALL_PLUGINS]/
+    }
+
+    TAS_TARGET_BIN=$$PREFIX/bin
+    TAS_TARGET_LIB=$$PREFIX/lib ## (bin on windows?)
+    TAS_TARGET_PLUGIN=$$PREFIX_PLUGINS # TODO: needs to be handled during install time
+    win32: {
+        TAS_TARGET_HEADERS=$$PREFIX/inc
+    } else: {
+        TAS_TARGET_HEADERS=$$PREFIX/include/tdriver
+    }
+    win32: {
+        TAS_TARGET_STEPS=$$SETTINGS_PATH/../cucumber
+    } else: {
+        TAS_TARGET_STEPS=$$SETTINGS_PATH/cucumber
+    }
+
+    #TODO: verify that all install locations supported?
 }
